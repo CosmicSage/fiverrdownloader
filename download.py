@@ -2,9 +2,25 @@
 import requests
 import time
 from datetime import datetime
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 import re
 from urllib.parse import urlparse
+
+# https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
+def download_file(url):
+    local_filename = f"./downloads/{url.split('/')[-1]}"
+    # NOTE the stream=True parameter below
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(local_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                #if chunk:
+                f.write(chunk)
+    return local_filename
+
+
 
 # Define the target URL
 target_url = "https://fiverr.com/kymmypops"  # Replace with the website URL you want to scrape
@@ -25,10 +41,8 @@ response = requests.get(target_url, headers=headers)
 
 
 # Check if the request was successful
-if True:
-# if response.status_code == 200:
-    # Parse the HTML content of the page using BeautifulSoup
-    soup = BeautifulSoup(response.text, 'html.parser')
+# if True:
+if response.status_code == 200:
 
     # Get the raw HTML content
     raw_html = response.text
@@ -50,11 +64,14 @@ if True:
     domain_urls = [url for url in urls if target_domain in urlparse(url[0]).netloc]
     print(len(domain_urls))
     for url in domain_urls:
-        print(url, end="\n\n")
+        # Donwload files
+        # print(url, end="\n\n")
+        download_file(url[0])
 
 
     print("Raw HTML response has been written to 'out.html'.")
 
+    # gpt3 garbage
     # # Iterate through the links and filter by domain
     # domain_links = [link.get('href') for link in links if link.get('href') and target_domain in urlparse(link.get('href')).netloc]
     #
