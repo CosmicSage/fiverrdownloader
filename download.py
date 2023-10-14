@@ -20,10 +20,12 @@ def download_file(url):
                 f.write(chunk)
     return local_filename
 
+# Get username
+username = input("Enter the username: ")
 
 
 # Define the target URL
-target_url = "https://fiverr.com/kymmypops"  # Replace with the website URL you want to scrape
+target_url = f"https://fiverr.com/{username}"  # Replace with the website URL you want to scrape
 
 # Define the domain you want to filter for
 target_domain = "fiverr-res.cloudinary"
@@ -55,6 +57,7 @@ if response.status_code == 200:
 
     # Find all the URLs in the HTML content
     urls = re.findall('"((http)s?://.*?)"', raw_html)
+    # gpt3 garbage
     # urls = re.findall(rf'https://{target_domain}\.com\S*', raw_html)
     # urls = [re.findall(rf'https://{target_domain}\.com\S*', url) for url in urls]
 
