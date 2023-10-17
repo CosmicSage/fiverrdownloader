@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 # https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
 def download_file(url):
-    local_filename = f"./downloads/{url.split('/')[-1]}"
+    local_filename = f"./downloadss/{url.split('/')[-1]}"
     # NOTE the stream=True parameter below
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
@@ -40,18 +40,14 @@ headers = {
 # Send an HTTP GET request to the target URL
 response = requests.get(target_url, headers=headers)
 
+# Get the raw HTML content
+raw_html = response.text
+
 
 
 # Check if the request was successful
 # if True:
 if response.status_code == 200:
-
-    # Get the raw HTML content
-    raw_html = response.text
-
-    # Write the raw HTML content to a file
-    with open("out.html", "w", encoding="utf-8") as file:
-        file.write(raw_html)
 
     # exit()
 
@@ -72,7 +68,7 @@ if response.status_code == 200:
         download_file(url[0])
 
 
-    print("Raw HTML response has been written to 'out.html'.")
+
 
     # gpt3 garbage
     # # Iterate through the links and filter by domain
@@ -83,3 +79,10 @@ if response.status_code == 200:
     #     print(link)
 else:
     print("Failed to retrieve the web page. Status code:", response.status_code)
+
+
+# Write the raw HTML content to a file
+with open("out.html", "w", encoding="utf-8") as file:
+     file.write(raw_html)
+
+print("Raw HTML response has been written to 'out.html'.")
