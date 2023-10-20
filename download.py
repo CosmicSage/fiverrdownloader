@@ -8,17 +8,25 @@ from urllib.parse import urlparse
 
 # https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
 def download_file(url):
-    local_filename = f"./downloadss/{url.split('/')[-1]}"
-    # NOTE the stream=True parameter below
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                # If you have chunk encoded response uncomment if
-                # and set chunk_size parameter to None.
-                #if chunk:
-                f.write(chunk)
-    return local_filename
+    try:
+        local_filename = f"./downl/{url.split('/')[-1]}"
+        # NOTE the stream=True parameter below
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with open(local_filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    # If you have chunk encoded response uncomment if
+                    # and set chunk_size parameter to None.
+                    #if chunk:
+                    f.write(chunk)
+        return local_filename
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            print(f"File not found: {url}")
+        else:
+            print(f"An error occurred: {e}")
+            return None
+
 
 # Get username
 username = input("Enter the username: ")
@@ -43,6 +51,9 @@ response = requests.get(target_url, headers=headers)
 # Get the raw HTML content
 raw_html = response.text
 
+# Write the raw HTML content to a file
+with open("out.html", "w", encoding="utf-8") as file:
+    file.write(raw_html)
 
 
 # Check if the request was successful
@@ -80,9 +91,5 @@ if response.status_code == 200:
 else:
     print("Failed to retrieve the web page. Status code:", response.status_code)
 
-
-# Write the raw HTML content to a file
-with open("out.html", "w", encoding="utf-8") as file:
-     file.write(raw_html)
 
 print("Raw HTML response has been written to 'out.html'.")
