@@ -6,10 +6,12 @@ from datetime import datetime
 import re
 from urllib.parse import urlparse
 
+path = input("where do you want to download? Enter DirectoryName: ")
+
 # https://stackoverflow.com/questions/16694907/download-large-file-in-python-with-requests
 def download_file(url):
     try:
-        local_filename = f"./downl/{url.split('/')[-1]}"
+        local_filename = f"./{path}/{url.split('/')[-1]}"
         # NOTE the stream=True parameter below
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
